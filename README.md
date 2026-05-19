@@ -118,8 +118,6 @@ O projeto seguirá as etapas da Engenharia de Requisitos:
     Wireframes
     Protótipos de Interface
 
-/apresentacao
-    Slides da apresentação
 ```
 
 ---
