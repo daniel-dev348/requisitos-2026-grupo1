@@ -12,6 +12,7 @@
 | 30/04/2026 | 2.0 | Atualização das seções de personas, restrições e glossário | Equipe de Desenvolvimento |
 | 02/06/2026 | 3.0 | Evolução para SRS (IEEE 830): especificação detalhada de requisitos | Equipe de Desenvolvimento |
 | 02/06/2026 | 4.0 | Atualização dos RFs e rastreabilidade com base no Diagrama de Casos de Uso v2 | Equipe de Desenvolvimento |
+| 02/06/2026 | 4.1 | Correção dos atores de UC-11, UC-12 e UC-13: Administrador → Coordenador | Equipe de Desenvolvimento |
 
 ---
 
@@ -19,7 +20,7 @@
 
 ### 1.1 Propósito
 
-Este documento especifica os requisitos de software do **Sistema de Preparação para o ENADE**, uma plataforma web destinada a apoiar estudantes de graduação na preparação para o Exame Nacional de Desempenho dos Estudantes. O documento segue o padrão IEEE 830 e tem como público-alvo a equipe de desenvolvimento, os professores orientadores e as coordenações de curso envolvidas no projeto.
+Este documento especifica os requisitos de software do **Sistema de Preparação para o ENADE**, uma plataforma web/mobile destinada a apoiar estudantes de graduação na preparação para o Exame Nacional de Desempenho dos Estudantes. O documento segue o padrão IEEE 830 e tem como público-alvo a equipe de desenvolvimento, os professores orientadores e as coordenações de curso envolvidas no projeto.
 
 ### 1.2 Escopo
 
@@ -74,12 +75,12 @@ O sistema **não contempla**, na versão 1.0:
 
 ### 2.1 Perspectiva do Produto
 
-O EnadePREP é um sistema novo, independente, sem integração obrigatória com outros sistemas institucionais na versão 1.0. Será acessado via navegador web (desktop). O sistema opera no modelo cliente-servidor, com front-end responsivo e back-end com API REST, conectado a um banco de dados relacional.
+O EnadePREP é um sistema novo, independente, sem integração obrigatória com outros sistemas institucionais na versão 1.0. Será acessado via navegador web (desktop e mobile). O sistema opera no modelo cliente-servidor, com front-end responsivo e back-end com API REST, conectado a um banco de dados relacional.
 
 ```
 [Estudante / Professor / Coordenador / Administrador]
         |
-   [Navegador Web]
+   [Navegador Web / App Mobile]
         |
    [Front-end — Interface]
         |
@@ -107,7 +108,7 @@ O EnadePREP é um sistema novo, independente, sem integração obrigatória com 
 | Estudante | Intermediário; smartphone e computador, familiaridade com Moodle | Alta — diária ou 3x/semana no pré-ENADE | Questões organizadas, simulados, feedback de erros |
 | Professor | Intermediário/Avançado; familiaridade com ferramentas acadêmicas | Média — cadastro e validação de questões periodicamente | Inserir e validar questões no banco |
 | Coordenador de Curso | Intermediário; ferramentas de gestão e planilhas | Média — semanal/mensal, maior intensidade no pré-ENADE | Relatórios visuais e sintéticos por turma |
-| Administrador | Avançado; gerencia o sistema | Alta — gestão contínua de usuários e turmas | Cadastrar turmas, alunos e professores no sistema |
+| Administrador (TI) | Avançado; gerencia infraestrutura técnica do sistema | Pontual — manutenção e suporte técnico | Gestão da infraestrutura; não cadastra usuários da plataforma |
 
 ### 2.4 Restrições Gerais
 
@@ -159,29 +160,31 @@ Os requisitos funcionais estão organizados por módulo, alinhados ao Diagrama d
 
 ---
 
-#### Módulo 2 — Gestão de Usuários (Administrador / Coordenador)
+#### Módulo 2 — Gestão de Usuários (Coordenador)
+
+> **Nota:** O Administrador (equipe de TI) é responsável pela infraestrutura técnica do sistema. O cadastro de usuários da plataforma (turmas, alunos e professores) é responsabilidade exclusiva do **Coordenador de Curso**, que libera o acesso de cada perfil.
 
 ---
 
 **RF-03 — Cadastrar turmas**
-- **Descrição:** O sistema deve permitir que o Administrador cadastre turmas no sistema, associando-as a um curso e período letivo.
-- **Atores:** Administrador
+- **Descrição:** O sistema deve permitir que o Coordenador cadastre turmas no sistema, associando-as a um curso e período letivo.
+- **Atores:** Coordenador de Curso
 - **Prioridade:** Alta
 - **UC Associado:** UC-11 — Cadastrar Turmas
 
 ---
 
 **RF-04 — Cadastrar alunos**
-- **Descrição:** O sistema deve permitir que o Administrador cadastre alunos, vinculando-os a uma turma e curso.
-- **Atores:** Administrador
+- **Descrição:** O sistema deve permitir que o Coordenador cadastre alunos, vinculando-os a uma turma e curso, liberando o acesso deles à plataforma.
+- **Atores:** Coordenador de Curso
 - **Prioridade:** Alta
 - **UC Associado:** UC-12 — Cadastrar Alunos
 
 ---
 
 **RF-05 — Cadastrar professores**
-- **Descrição:** O sistema deve permitir que o Administrador cadastre professores, habilitando-os a registrar e validar questões no banco.
-- **Atores:** Administrador
+- **Descrição:** O sistema deve permitir que o Coordenador cadastre professores, habilitando o acesso deles à plataforma e ao registro de questões.
+- **Atores:** Coordenador de Curso
 - **Prioridade:** Alta
 - **UC Associado:** UC-13 — Cadastrar Professores
 
@@ -383,9 +386,9 @@ Os requisitos funcionais estão organizados por módulo, alinhados ao Diagrama d
 |-----------|-------------------|---------------------------|--------------|
 | RF-01 | Cadastrar-se e login | UC-01 | — |
 | RF-02 | Recuperar senha | UC-10 | — |
-| RF-03 | Cadastrar turmas | UC-11 | — |
-| RF-04 | Cadastrar alunos | UC-12 | — |
-| RF-05 | Cadastrar professores | UC-13 | — |
+| RF-03 | Cadastrar turmas | UC-11 | — | Coordenador |
+| RF-04 | Cadastrar alunos | UC-12 | — | Coordenador |
+| RF-05 | Cadastrar professores | UC-13 | — | Coordenador |
 | RF-06 | Registrar questões e competências | UC-09 | RN-01 |
 | RF-07 | Validar questão no banco | UC-14 | RN-01, RN-07 |
 | RF-08 | Consultar banco de questões | UC-02 | RN-01 |
