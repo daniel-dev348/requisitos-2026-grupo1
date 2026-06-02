@@ -11,8 +11,7 @@
 | 28/04/2026 | 1.0 | Criação do Documento de Visão (VD) | Equipe de Desenvolvimento |
 | 30/04/2026 | 2.0 | Atualização das seções de personas, restrições e glossário | Equipe de Desenvolvimento |
 | 02/06/2026 | 3.0 | Evolução para SRS (IEEE 830): especificação detalhada de requisitos | Equipe de Desenvolvimento |
-| 02/06/2026 | 4.0 | Atualização dos RFs e rastreabilidade com base no Diagrama de Casos de Uso v2 | Equipe de Desenvolvimento |
-| 02/06/2026 | 4.1 | Correção dos atores de UC-11, UC-12 e UC-13: Administrador → Coordenador | Equipe de Desenvolvimento |
+
 
 ---
 
