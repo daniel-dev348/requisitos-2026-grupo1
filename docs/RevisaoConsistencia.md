@@ -11,7 +11,7 @@
 |-----------------|-------------|--------|-------------|--------|
 | UC-15 — Gerenciar Configurações do Sistema | **Administrador** | Infraestrutura | RF-00 | ✅ Adicionado (v4) |
 | UC-01 — Cadastrar-se e Login | Todos | Acesso | RF-01 | ✅ Consistente |
-| UC-10 — Recuperar Senha | Todos / **Coordenador (terceiros)** | Acesso | RF-02 | ✅ Atualizado (v4) |
+| UC-10 — Recuperar Senha | Coordenador  | Acesso | RF-02 | ✅ Atualizado (v4) |
 | UC-11 — Cadastrar Turmas | Coordenador | Gestão de Usuários | RF-03 | ✅ Consistente |
 | UC-12 — Cadastrar Alunos | Coordenador | Gestão de Usuários | RF-04 | ✅ Consistente |
 | UC-13 — Cadastrar Professores | Coordenador | Gestão de Usuários | RF-05 | ✅ Consistente |
