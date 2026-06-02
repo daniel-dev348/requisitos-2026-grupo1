@@ -19,7 +19,7 @@
 
 ### 1.1 Propósito
 
-Este documento especifica os requisitos de software do **Sistema de Preparação para o ENADE**, uma plataforma web/mobile destinada a apoiar estudantes de graduação na preparação para o Exame Nacional de Desempenho dos Estudantes. O documento segue o padrão IEEE 830 e tem como público-alvo a equipe de desenvolvimento, os professores orientadores e as coordenações de curso envolvidas no projeto.
+Este documento especifica os requisitos de software do **Sistema de Preparação para o ENADE**, uma plataforma web destinada a apoiar estudantes de graduação na preparação para o Exame Nacional de Desempenho dos Estudantes. O documento segue o padrão IEEE 830 e tem como público-alvo a equipe de desenvolvimento, os professores orientadores e as coordenações de curso envolvidas no projeto.
 
 ### 1.2 Escopo
 
@@ -74,12 +74,12 @@ O sistema **não contempla**, na versão 1.0:
 
 ### 2.1 Perspectiva do Produto
 
-O EnadePREP é um sistema novo, independente, sem integração obrigatória com outros sistemas institucionais na versão 1.0. Será acessado via navegador web (desktop e mobile). O sistema opera no modelo cliente-servidor, com front-end responsivo e back-end com API REST, conectado a um banco de dados relacional.
+O EnadePREP é um sistema novo, independente, sem integração obrigatória com outros sistemas institucionais na versão 1.0. Será acessado via navegador web (desktop). O sistema opera no modelo cliente-servidor, com front-end responsivo e back-end com API REST, conectado a um banco de dados relacional.
 
 ```
 [Estudante / Professor / Coordenador / Administrador]
         |
-   [Navegador Web / App Mobile]
+   [Navegador Web]
         |
    [Front-end — Interface]
         |
