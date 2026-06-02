@@ -1,7 +1,7 @@
 # Revisão de Consistência — UML × SRS
 ## Sistema de Preparação para o ENADE
 
-**Data:** 02/06/2026 | **Diagrama referenciado:** v3 (corrigido) | **SRS referenciado:** v3
+**Data:** 02/06/2026 | **Diagrama referenciado:** v3 (corrigido) | **SRS referenciado:** v4
 
 ---
 
@@ -9,11 +9,12 @@
 
 | UC (Diagrama v3) | Ator correto | Módulo | RFs Cobertos | Status |
 |-----------------|-------------|--------|-------------|--------|
+| UC-15 — Gerenciar Configurações do Sistema | **Administrador** | Infraestrutura | RF-00 | ✅ Adicionado (v4) |
 | UC-01 — Cadastrar-se e Login | Todos | Acesso | RF-01 | ✅ Consistente |
-| UC-10 — Recuperar Senha | Todos | Acesso | RF-02 | ✅ Consistente |
-| UC-11 — Cadastrar Turmas | **Coordenador** | Gestão de Usuários | RF-03 | ✅ Corrigido (era Administrador) |
-| UC-12 — Cadastrar Alunos | **Coordenador** | Gestão de Usuários | RF-04 | ✅ Corrigido (era Administrador) |
-| UC-13 — Cadastrar Professores | **Coordenador** | Gestão de Usuários | RF-05 | ✅ Corrigido (era Administrador) |
+| UC-10 — Recuperar Senha | Todos / **Coordenador (terceiros)** | Acesso | RF-02 | ✅ Atualizado (v4) |
+| UC-11 — Cadastrar Turmas | Coordenador | Gestão de Usuários | RF-03 | ✅ Consistente |
+| UC-12 — Cadastrar Alunos | Coordenador | Gestão de Usuários | RF-04 | ✅ Consistente |
+| UC-13 — Cadastrar Professores | Coordenador | Gestão de Usuários | RF-05 | ✅ Consistente |
 | UC-09 — Registrar Questões | Professor | Banco de Questões | RF-06 | ✅ Consistente |
 | UC-14 — Validar Questão | Professor | Banco de Questões | RF-07 | ✅ Consistente |
 | UC-02 — Consultar Questões | Estudante | Banco de Questões | RF-08 | ✅ Consistente |
@@ -29,11 +30,12 @@
 
 | Requisito | UC no Diagrama | Ator correto | Coberto? |
 |-----------|---------------|-------------|----------|
+| RF-00 | UC-15 | **Administrador** | ✅ |
 | RF-01 | UC-01 | Todos | ✅ |
-| RF-02 | UC-10 | Todos | ✅ |
-| RF-03 | UC-11 | **Coordenador** | ✅ |
-| RF-04 | UC-12 | **Coordenador** | ✅ |
-| RF-05 | UC-13 | **Coordenador** | ✅ |
+| RF-02 | UC-10 | Todos / Coordenador (terceiros) | ✅ |
+| RF-03 | UC-11 | Coordenador | ✅ |
+| RF-04 | UC-12 | Coordenador | ✅ |
+| RF-05 | UC-13 | Coordenador | ✅ |
 | RF-06 | UC-09 | Professor | ✅ |
 | RF-07 | UC-14 | Professor | ✅ |
 | RF-08 | UC-02 | Estudante | ✅ |
@@ -50,8 +52,8 @@
 
 | Ator no Diagrama v3 | Papel no sistema | RFs que acessa |
 |--------------------|-----------------|----------------|
-| Administrador (TI) | Infraestrutura técnica — não cadastra usuários da plataforma | RF-01, RF-02 (acesso geral) |
-| Coordenador | Libera acesso de alunos e professores; acompanha indicadores | RF-01, RF-02, **RF-03, RF-04, RF-05**, RF-13 |
+| Administrador (TI) | Infraestrutura técnica e configurações do sistema — não cadastra usuários da plataforma | RF-00, RF-01, RF-02 (acesso geral) |
+| Coordenador | Libera acesso de alunos e professores; acompanha indicadores; pode acionar recuperação de senha de terceiros | RF-01, RF-02, **RF-03, RF-04, RF-05**, RF-13 |
 | Professor | Após acesso liberado pelo Coordenador: registra e valida questões | RF-01, RF-02, RF-06, RF-07 |
 | Estudante | Após acesso liberado pelo Coordenador: usa a plataforma | RF-01, RF-02, RF-08 a RF-14 |
 
@@ -81,15 +83,16 @@
 
 ---
 
-## 6. Correções aplicadas nesta versão
+## 6. Correções aplicadas
 
-| Item corrigido | Versão anterior (v2) | Versão atual (v3) |
-|---------------|---------------------|------------------------------|
-| Ator de UC-11 | Administrador | **Coordenador** |
-| Ator de UC-12 | Administrador | **Coordenador** |
-| Ator de UC-13 | Administrador | **Coordenador** |
-| Papel do Administrador | Cadastrava usuários da plataforma | Apenas infraestrutura técnica (TI) |
-| Papel do Coordenador | Só relatórios | Gestão de usuários + relatórios |
+| Item corrigido | Versão anterior | Versão atual |
+|---------------|-----------------|--------------|
+| Ator de UC-11 | Administrador | Coordenador *(v3)* |
+| Ator de UC-12 | Administrador | Coordenador *(v3)* |
+| Ator de UC-13 | Administrador | Coordenador *(v3)* |
+| Papel do Administrador | Cadastrava usuários da plataforma | Infraestrutura técnica + configurações do sistema (TI) *(v4)* |
+| RF-00 / UC-15 | Ausente | Gerenciar Configurações do Sistema — Administrador *(v4)* |
+| RF-02 — escopo do Coordenador | Apenas self-service | Inclui fluxo de recuperação de senha de terceiros (estudantes/professores) *(v4)* |
 
 ---
 
@@ -97,10 +100,10 @@
 
 | Indicador | Resultado |
 |-----------|-----------|
-| Total de RFs no SRS v4.1 | 14 |
-| RFs cobertos por UC no diagrama v3 | 14 |
-| Total de UCs no diagrama v3 | 13 |
-| UCs com RF correspondente | 13 |
+| Total de RFs no SRS v4 | 15 |
+| RFs cobertos por UC no diagrama v3 | 15 |
+| Total de UCs no diagrama v3 | 14 |
+| UCs com RF correspondente | 14 |
 | Inconsistências encontradas | 0 |
-| Correções aplicadas nesta versão | 3 (atores de UC-11, UC-12 e UC-13) |
-
+| Correções aplicadas na v3 | 3 (atores de UC-11, UC-12 e UC-13) |
+| Correções aplicadas na v4 | 3 (RF-00 adicionado, RF-02 expandido, UC-15 incluído) |
