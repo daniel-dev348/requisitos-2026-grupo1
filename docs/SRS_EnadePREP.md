@@ -11,7 +11,7 @@
 | 28/04/2026 | 1.0 | Criação do Documento de Visão (VD) | Equipe de Desenvolvimento |
 | 30/04/2026 | 2.0 | Atualização das seções de personas, restrições e glossário | Equipe de Desenvolvimento |
 | 02/06/2026 | 3.0 | Evolução para SRS (IEEE 830): especificação detalhada de requisitos | Equipe de Desenvolvimento |
-
+| 02/06/2026 | 4.0 | Revisão de consistência UML × SRS: ajuste de atores, inclusão de RF-06 no diagrama, revisão de RF-02 e remoção de UC sem RF | Equipe de Desenvolvimento |
 
 ---
 
@@ -60,7 +60,7 @@ O sistema **não contempla**, na versão 1.0:
 - Lei nº 13.709/2018 — Lei Geral de Proteção de Dados (LGPD)
 - Portal INEP: www.inep.gov.br (fonte das provas oficiais do ENADE)
 - Documento de Visão da Demanda (VD) — versão 2.0, 30/04/2026
-- Diagrama de Casos de Uso — Sistema de Preparação para o ENADE v2, UNIFOR Grupo 1, 2026
+- Diagrama de Casos de Uso — Sistema de Preparação para o ENADE v3, UNIFOR Grupo 1, 2026
 
 ### 1.5 Visão Geral do Documento
 
@@ -107,7 +107,7 @@ O EnadePREP é um sistema novo, independente, sem integração obrigatória com 
 | Estudante | Intermediário; smartphone e computador, familiaridade com Moodle | Alta — diária ou 3x/semana no pré-ENADE | Questões organizadas, simulados, feedback de erros |
 | Professor | Intermediário/Avançado; familiaridade com ferramentas acadêmicas | Média — cadastro e validação de questões periodicamente | Inserir e validar questões no banco |
 | Coordenador de Curso | Intermediário; ferramentas de gestão e planilhas | Média — semanal/mensal, maior intensidade no pré-ENADE | Relatórios visuais e sintéticos por turma |
-| Administrador (TI) | Avançado; gerencia infraestrutura técnica do sistema | Pontual — manutenção e suporte técnico | Gestão da infraestrutura; não cadastra usuários da plataforma |
+| Administrador (TI) | Avançado; gerencia infraestrutura técnica do sistema | Pontual — manutenção e suporte técnico | Gestão da infraestrutura e configurações do sistema; não cadastra usuários da plataforma |
 
 ### 2.4 Restrições Gerais
 
@@ -135,7 +135,19 @@ O EnadePREP é um sistema novo, independente, sem integração obrigatória com 
 
 ### 3.1 Requisitos Funcionais
 
-Os requisitos funcionais estão organizados por módulo, alinhados ao Diagrama de Casos de Uso v2.
+Os requisitos funcionais estão organizados por módulo, alinhados ao Diagrama de Casos de Uso v3.
+
+---
+
+#### Módulo 0 — Infraestrutura e Configurações (Administrador)
+
+---
+
+**RF-00 — Gerenciar configurações do sistema**
+- **Descrição:** O sistema deve disponibilizar ao Administrador (TI) interface para gerenciar configurações técnicas da plataforma, incluindo parâmetros de infraestrutura e controles operacionais do sistema. O Administrador não realiza cadastro de usuários da plataforma.
+- **Atores:** Administrador (TI)
+- **Prioridade:** Alta
+- **UC Associado:** UC-15 — Gerenciar Configurações do Sistema
 
 ---
 
@@ -152,7 +164,7 @@ Os requisitos funcionais estão organizados por módulo, alinhados ao Diagrama d
 ---
 
 **RF-02 — Recuperar senha**
-- **Descrição:** O sistema deve oferecer mecanismo de recuperação de senha via e-mail cadastrado, enviando link temporário para redefinição.
+- **Descrição:** O sistema deve oferecer mecanismo de recuperação de senha via e-mail cadastrado, enviando link temporário para redefinição. Cada usuário recupera exclusivamente sua própria senha. O Coordenador pode acionar a recuperação de senha de estudantes e professores vinculados à sua instituição, nos casos em que esses usuários não tenham acesso ao e-mail cadastrado.
 - **Atores:** Estudante, Professor, Coordenador, Administrador
 - **Prioridade:** Média
 - **UC Associado:** UC-10 — Recuperar Senha
@@ -381,19 +393,20 @@ Os requisitos funcionais estão organizados por módulo, alinhados ao Diagrama d
 
 ## Apêndice A — Rastreabilidade de Requisitos
 
-| Requisito | Descrição Resumida | UC Associado (diagrama v2) | RN Associada |
-|-----------|-------------------|---------------------------|--------------|
-| RF-01 | Cadastrar-se e login | UC-01 | — |
-| RF-02 | Recuperar senha | UC-10 | — |
+| Requisito | Descrição Resumida | UC Associado (diagrama v3) | RN Associada | Ator |
+|-----------|-------------------|---------------------------|--------------|------|
+| RF-00 | Gerenciar configurações do sistema | UC-15 | — | Administrador |
+| RF-01 | Cadastrar-se e login | UC-01 | — | Todos |
+| RF-02 | Recuperar senha | UC-10 | — | Todos / Coordenador (terceiros) |
 | RF-03 | Cadastrar turmas | UC-11 | — | Coordenador |
 | RF-04 | Cadastrar alunos | UC-12 | — | Coordenador |
 | RF-05 | Cadastrar professores | UC-13 | — | Coordenador |
-| RF-06 | Registrar questões e competências | UC-09 | RN-01 |
-| RF-07 | Validar questão no banco | UC-14 | RN-01, RN-07 |
-| RF-08 | Consultar banco de questões | UC-02 | RN-01 |
-| RF-09 | Visualizar gabarito comentado | UC-04 | RN-04 |
-| RF-10 | Realizar simulado cronometrado | UC-03 | RN-01, RN-02, RN-03 |
-| RF-11 | Exibir resultado do simulado | UC-03 / UC-04 | RN-04 |
-| RF-12 | Ver desempenho individual | UC-05 | — |
-| RF-13 | Acompanhar indicadores por turma | UC-07 | RN-05 |
-| RF-14 | Participar do fórum | UC-06 | RN-06 |
+| RF-06 | Registrar questões e competências | UC-09 | RN-01 | Professor |
+| RF-07 | Validar questão no banco | UC-14 | RN-01, RN-07 | Professor |
+| RF-08 | Consultar banco de questões | UC-02 | RN-01 | Estudante |
+| RF-09 | Visualizar gabarito comentado | UC-04 | RN-04 | Estudante |
+| RF-10 | Realizar simulado cronometrado | UC-03 | RN-01, RN-02, RN-03 | Estudante |
+| RF-11 | Exibir resultado do simulado | UC-03 / UC-04 | RN-04 | Estudante |
+| RF-12 | Ver desempenho individual | UC-05 | — | Estudante |
+| RF-13 | Acompanhar indicadores por turma | UC-07 | RN-05 | Coordenador |
+| RF-14 | Participar do fórum | UC-06 | RN-06 | Estudante |
