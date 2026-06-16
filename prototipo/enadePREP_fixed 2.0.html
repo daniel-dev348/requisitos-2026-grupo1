@@ -1,0 +1,1447 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnadePREP — Plataforma de Preparação para o ENADE</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0f1a;
+  --surface: #111827;
+  --surface2: #1a2235;
+  --border: #1e2d45;
+  --accent: #00d4aa;
+  --accent2: #3b82f6;
+  --accent3: #f59e0b;
+  --danger: #ef4444;
+  --success: #10b981;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --radius: 12px;
+  --radius-lg: 20px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* LOGIN */
+#screen-login { align-items: center; justify-content: center; background: radial-gradient(ellipse at 30% 20%, #0a2640 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, #001a15 0%, transparent 60%), var(--bg); position: relative; overflow: hidden; }
+#screen-login::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(0,212,170,.03) 60px, rgba(0,212,170,.03) 61px), repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(0,212,170,.03) 60px, rgba(0,212,170,.03) 61px); pointer-events: none; }
+.login-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 48px; width: 100%; max-width: 440px; position: relative; z-index: 1; box-shadow: 0 0 80px rgba(0,212,170,.08), 0 40px 80px rgba(0,0,0,.4); animation: fadeUp .5s ease both; }
+.login-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+.login-logo { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: #000; }
+.login-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+.login-title span { color: var(--accent); }
+.login-subtitle { color: var(--text2); font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
+.form-input, .form-select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; color: var(--text); font-family: inherit; font-size: 14px; outline: none; transition: border-color .2s; }
+.form-input:focus, .form-select:focus { border-color: var(--accent); }
+.form-select option { background: var(--surface2); }
+textarea.form-input { resize: vertical; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: var(--radius); border: none; font-family: 'Syne', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: all .2s; text-decoration: none; white-space: nowrap; }
+.btn-primary { background: var(--accent); color: #000; width: 100%; }
+.btn-primary:hover { background: #00b894; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,212,170,.3); }
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #dc2626; }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover { color: var(--text); border-color: var(--text3); }
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-inline { width: auto; }
+.login-demo { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+.login-demo p { font-size: 12px; color: var(--text3); margin-bottom: 10px; }
+.demo-btns { display: flex; flex-direction: column; gap: 8px; }
+.demo-btn { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all .2s; text-align: left; }
+.demo-btn:hover { border-color: var(--accent); background: rgba(0,212,170,.05); }
+.demo-btn-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.demo-btn-info strong { display: block; font-size: 13px; color: var(--text); }
+.demo-btn-info span { font-size: 11px; color: var(--text3); }
+
+/* APP LAYOUT */
+#screen-app { flex-direction: row; }
+.sidebar { width: 240px; min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; transition: transform .3s ease; }
+@media (max-width: 768px) {
+  #screen-app { position: relative; }
+  .sidebar { position: fixed; z-index: 200; transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,.5); }
+  .main-content { width: 100%; }
+  .hamburger { display: flex !important; }
+  .sidebar-overlay { display: block !important; }
+}
+.hamburger { display: none; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; flex-shrink: 0; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 199; }
+.sidebar-brand { display: flex; align-items: center; gap: 10px; padding: 20px 20px 16px; border-bottom: 1px solid var(--border); }
+.sidebar-logo { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; color: #000; flex-shrink: 0; }
+.sidebar-brand-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; }
+.sidebar-brand-name span { color: var(--accent); }
+.sidebar-user { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.sidebar-user-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+.sidebar-user-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.sidebar-user-role { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.role-badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.role-estudante { background: rgba(0,212,170,.15); color: var(--accent); }
+.role-professor { background: rgba(59,130,246,.15); color: var(--accent2); }
+.role-coordenador { background: rgba(245,158,11,.15); color: var(--accent3); }
+.sidebar-nav { padding: 12px 12px; flex: 1; }
+.nav-section-label { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; padding: 8px 8px 4px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 10px; border-radius: 8px; cursor: pointer; transition: all .2s; margin-bottom: 2px; font-size: 14px; color: var(--text2); border: none; background: none; width: 100%; text-align: left; }
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: rgba(0,212,170,.1); color: var(--accent); }
+.nav-item svg { flex-shrink: 0; }
+.sidebar-bottom { padding: 16px 12px; border-top: 1px solid var(--border); }
+.main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.page-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--surface); flex-shrink: 0; }
+.page-header h2 { font-size: 22px; font-weight: 700; }
+.page-header p { font-size: 13px; color: var(--text2); margin-top: 2px; }
+.page-body { padding: 32px; flex: 1; overflow-y: auto; }
+.page { display: none; }
+.page.active { display: block; animation: fadeIn .2s ease both; }
+
+/* DASHBOARD */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; transition: border-color .2s; }
+.stat-card:hover { border-color: var(--text3); }
+.stat-label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.stat-value { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; }
+.stat-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.stat-icon { font-size: 20px; margin-bottom: 8px; }
+.section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+/* BANCO */
+.filter-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; align-items: flex-end; }
+.filter-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
+.filter-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
+.question-list { display: flex; flex-direction: column; gap: 16px; }
+.question-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: border-color .2s; }
+.question-card:hover { border-color: var(--accent); }
+.question-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
+.tag-fg { background: rgba(59,130,246,.15); color: var(--accent2); }
+.tag-ce { background: rgba(245,158,11,.15); color: var(--accent3); }
+.tag-year { background: var(--surface2); color: var(--text2); }
+.tag-area { background: rgba(0,212,170,.1); color: var(--accent); }
+.question-text { font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 16px; }
+.options-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.option-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 14px; transition: all .2s; text-align: left; width: 100%; color: var(--text); }
+.option-item:hover { border-color: var(--accent2); background: rgba(59,130,246,.05); }
+.option-item.selected { border-color: var(--accent2); background: rgba(59,130,246,.1); }
+.option-item.correct { border-color: var(--success); background: rgba(16,185,129,.1); }
+.option-item.wrong { border-color: var(--danger); background: rgba(239,68,68,.1); }
+.option-letter { width: 24px; height: 24px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; font-family: 'Syne', sans-serif; }
+.gabarito-box { background: rgba(0,212,170,.05); border: 1px solid rgba(0,212,170,.2); border-radius: 8px; padding: 16px; margin-top: 12px; display: none; }
+.gabarito-box.visible { display: block; }
+.gabarito-title { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.gabarito-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* SIMULADO */
+.simulado-header-bar { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 24px; margin-bottom: 24px; }
+.timer-display { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--accent); letter-spacing: 2px; }
+.timer-display.warning { color: var(--accent3); }
+.timer-display.danger { color: var(--danger); animation: pulse 1s infinite; }
+.progress-bar-container { flex: 1; margin: 0 20px; }
+.progress-bar { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 3px; transition: width .3s; }
+.question-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+.qnav-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; font-family: 'Syne', sans-serif; }
+.qnav-btn.answered { background: rgba(0,212,170,.15); border-color: var(--accent); color: var(--accent); }
+.qnav-btn.current { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+.simulado-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+.resultado-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; text-align: center; margin-bottom: 24px; }
+.resultado-score { font-family: 'Syne', sans-serif; font-size: 72px; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin: 16px 0; }
+.resultado-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+.resultado-item { text-align: center; }
+.resultado-item-val { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; }
+.resultado-item-label { font-size: 12px; color: var(--text3); }
+
+/* DESEMPENHO */
+.chart-container { position: relative; height: 200px; display: flex; align-items: flex-end; gap: 8px; padding-top: 20px; }
+.chart-bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.chart-bar { width: 100%; border-radius: 6px 6px 0 0; transition: height .6s cubic-bezier(.34,1.56,.64,1); min-height: 4px; position: relative; }
+.chart-label { font-size: 11px; color: var(--text3); margin-top: 6px; text-align: center; }
+.chart-pct { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; white-space: nowrap; }
+.history-list { display: flex; flex-direction: column; gap: 10px; }
+.history-item { display: flex; align-items: center; gap: 16px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; }
+.history-score { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; min-width: 50px; text-align: center; }
+.history-details { flex: 1; }
+.history-details strong { display: block; font-size: 14px; }
+.history-details span { color: var(--text3); font-size: 12px; }
+.score-good { color: var(--success); }
+.score-ok { color: var(--accent3); }
+.score-bad { color: var(--danger); }
+
+/* FORUM */
+.forum-thread { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.forum-post { display: flex; gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.forum-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; font-family: 'Syne', sans-serif; }
+.forum-post-body { flex: 1; }
+.forum-post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.forum-post-user { font-size: 13px; font-weight: 600; }
+.forum-post-time { font-size: 11px; color: var(--text3); }
+.forum-post-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.forum-input-area { display: flex; gap: 10px; margin-top: 16px; }
+.forum-input-area textarea { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; color: var(--text); font-family: inherit; font-size: 13px; resize: none; height: 60px; outline: none; transition: border-color .2s; }
+.forum-input-area textarea:focus { border-color: var(--accent); }
+
+/* PROFESSOR */
+.options-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.option-form-row { display: flex; gap: 8px; align-items: center; }
+.option-form-row .form-input { flex: 1; }
+.radio-correct { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+.validacao-list { display: flex; flex-direction: column; gap: 12px; }
+.validacao-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+.validacao-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.validacao-actions { display: flex; gap: 8px; }
+
+/* COORDENADOR */
+.turma-tab-bar { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.turma-tab { padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--text2); font-size: 13px; cursor: pointer; transition: all .2s; font-family: 'Syne', sans-serif; font-weight: 600; }
+.turma-tab.active { background: rgba(0,212,170,.1); border-color: var(--accent); color: var(--accent); }
+.coord-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.coord-table th { text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--border); color: var(--text3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Syne', sans-serif; }
+.coord-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+.coord-table tr:last-child td { border-bottom: none; }
+.bar-mini { height: 6px; border-radius: 3px; display: inline-block; }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; animation: fadeUp .3s ease both; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-header h3 { font-size: 18px; }
+.close-btn { background: none; border: none; color: var(--text3); font-size: 20px; cursor: pointer; padding: 4px; }
+.close-btn:hover { color: var(--text); }
+
+/* TOASTS */
+.toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+.toast { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; font-size: 13px; max-width: 300px; animation: slideIn .3s ease both; display: flex; align-items: center; gap: 8px; }
+.toast-success { border-left: 3px solid var(--success); }
+.toast-error { border-left: 3px solid var(--danger); }
+.toast-info { border-left: 3px solid var(--accent2); }
+.badge { display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; background: var(--danger); color: #fff; margin-left: 6px; }
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text3); }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.animate-in { animation: fadeIn .3s ease both; }
+.alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.alert-danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: #fca5a5; }
+.alert-info { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.3); color: #93c5fd; }
+.alert-warning { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); color: #fcd34d; }
+.chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); font-size: 12px; cursor: pointer; transition: all .15s; color: var(--text2); user-select: none; }
+.chip.active { background: rgba(0,212,170,.15); border-color: var(--accent); color: var(--accent); }
+.chip:hover { border-color: var(--text3); color: var(--text); }
+.mgmt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.list-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.list-item:last-child { border-bottom: none; }
+.list-item-info strong { display: block; }
+.list-item-info span { color: var(--text3); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen active">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-logo">EP</div>
+      <div>
+        <div class="login-title">Enade<span>PREP</span></div>
+      </div>
+    </div>
+    <div id="loginForm">
+      <p class="login-subtitle">Plataforma de preparação para o ENADE. Faça login para continuar.</p>
+      <div class="form-group">
+        <label class="form-label">E-mail</label>
+        <input type="email" class="form-input" id="loginEmail" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••">
+      </div>
+      <div id="loginError" class="alert alert-danger" style="display:none">⚠️ Credenciais inválidas. Tente novamente.</div>
+      <button class="btn btn-primary" onclick="doLogin()">Entrar</button>
+    </div>
+    <div class="login-demo">
+      <p>🚀 Acesso rápido para demonstração:</p>
+      <div class="demo-btns">
+        <div class="demo-btn" onclick="demoLogin('estudante')">
+          <div class="demo-btn-icon" style="background:rgba(0,212,170,.15)">🎓</div>
+          <div class="demo-btn-info"><strong>Estudante</strong><span>ana@enade.com / 123456</span></div>
+        </div>
+        <div class="demo-btn" onclick="demoLogin('professor')">
+          <div class="demo-btn-icon" style="background:rgba(59,130,246,.15)">👨‍🏫</div>
+          <div class="demo-btn-info"><strong>Professor</strong><span>prof@enade.com / 123456</span></div>
+        </div>
+        <div class="demo-btn" onclick="demoLogin('coordenador')">
+          <div class="demo-btn-icon" style="background:rgba(245,158,11,.15)">📊</div>
+          <div class="demo-btn-info"><strong>Coordenador</strong><span>coord@enade.com / 123456</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="screen-app" class="screen">
+  <button class="hamburger" onclick="toggleSidebar()" style="position:fixed;top:16px;left:16px;z-index:210;display:none" id="globalHamburger" title="Menu">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">EP</div>
+      <div class="sidebar-brand-name">Enade<span>PREP</span></div>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebarAvatar"></div>
+      <div class="sidebar-user-name" id="sidebarName">—</div>
+      <div class="sidebar-user-role" id="sidebarEmail">—</div>
+      <div class="role-badge" id="sidebarBadge">—</div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-bottom">
+      <button class="btn btn-ghost btn-sm" style="width:100%" onclick="doLogout()">⬅ Sair</button>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+  <div class="main-content">
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page active">
+      <div class="page-header">
+        <div><h2 id="dashTitle">Dashboard</h2><p id="dashSubtitle">Bem-vindo de volta!</p></div>
+      </div>
+      <div class="page-body" id="dashBody"></div>
+    </div>
+
+    <!-- BANCO -->
+    <div id="page-banco" class="page">
+      <div class="page-header">
+        <div><h2>Banco de Questões</h2><p>Questões das provas anteriores do ENADE · Fonte: INEP</p></div>
+      </div>
+      <div class="page-body">
+        <div class="filter-bar">
+          <div class="filter-group"><span class="filter-label">Componente</span>
+            <select class="form-select" id="filterComp" onchange="filterQuestions()">
+              <option value="">Todos</option><option value="fg">Formação Geral</option><option value="ce">Conhecimento Específico</option>
+            </select>
+          </div>
+          <div class="filter-group"><span class="filter-label">Ano</span>
+            <select class="form-select" id="filterAno" onchange="filterQuestions()">
+              <option value="">Todos</option><option value="2023">2023</option><option value="2022">2022</option><option value="2021">2021</option>
+            </select>
+          </div>
+          <div class="filter-group"><span class="filter-label">Área</span>
+            <select class="form-select" id="filterArea" onchange="filterQuestions()">
+              <option value="">Todas</option><option value="Raciocínio Lógico">Raciocínio Lógico</option><option value="Português">Português</option><option value="Algoritmos">Algoritmos</option><option value="Banco de Dados">Banco de Dados</option><option value="Redes">Redes</option><option value="Engenharia de Software">Engenharia de Software</option>
+            </select>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="resetFilters()">Limpar</button>
+        </div>
+        <div class="question-list" id="questionList"></div>
+      </div>
+    </div>
+
+    <!-- SIMULADO -->
+    <div id="page-simulado" class="page">
+      <div class="page-header">
+        <div><h2>Simulado Cronometrado</h2><p>Configure e inicie seu simulado · Cronômetro não pode ser pausado (RN-03)</p></div>
+      </div>
+      <div class="page-body" id="simuladoBody"></div>
+    </div>
+
+    <!-- DESEMPENHO -->
+    <div id="page-desempenho" class="page">
+      <div class="page-header">
+        <div><h2>Meu Desempenho</h2><p>Acompanhe sua evolução por área de conhecimento</p></div>
+      </div>
+      <div class="page-body" id="desempenhoBody"></div>
+    </div>
+
+    <!-- FORUM -->
+    <div id="page-forum" class="page">
+      <div class="page-header">
+        <div><h2>Fórum de Discussão</h2><p>Debata questões com outros estudantes · Apenas usuários autenticados podem postar (RN-06)</p></div>
+      </div>
+      <div class="page-body" id="forumBody"></div>
+    </div>
+
+    <!-- PROFESSOR -->
+    <div id="page-professor" class="page">
+      <div class="page-header">
+        <div><h2>Gestão de Questões</h2><p>Cadastre e valide questões para o banco · Validação por par obrigatória (RN-07)</p></div>
+        <button class="btn btn-ghost btn-sm btn-inline" onclick="showPage('dashboard')">← Voltar ao Dashboard</button>
+      </div>
+      <div class="page-body" id="professorBody"></div>
+    </div>
+
+    <!-- COORDENADOR -->
+    <div id="page-coordenador" class="page">
+      <div class="page-header">
+        <div><h2>Painel da Coordenação</h2><p>Indicadores agregados por turma · Dados anonimizados (RN-05 · LGPD)</p></div>
+        <button class="btn btn-ghost btn-sm btn-inline" onclick="showPage('dashboard')">← Voltar ao Dashboard</button>
+      </div>
+      <div class="page-body" id="coordenadorBody"></div>
+    </div>
+
+    <!-- GESTAO -->
+    <div id="page-gestao" class="page">
+      <div class="page-header">
+        <div><h2>Gestão de Usuários</h2><p>Cadastre turmas, alunos e professores</p></div>
+        <button class="btn btn-ghost btn-sm btn-inline" onclick="showPage('dashboard')">← Voltar ao Dashboard</button>
+      </div>
+      <div class="page-body" id="gestaoBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const USERS = [
+  { id:1, name:'Ana Souza', email:'ana@enade.com', password:'123456', role:'estudante', curso:'Ciência da Computação', turma:'CC-2024A' },
+  { id:2, name:'Prof. Carlos Lima', email:'prof@enade.com', password:'123456', role:'professor', curso:'Ciência da Computação' },
+  { id:3, name:'Coord. Maria Fernanda', email:'coord@enade.com', password:'123456', role:'coordenador', curso:'Ciência da Computação' },
+];
+
+const QUESTIONS = [
+  { id:1, ano:2023, componente:'fg', area:'Raciocínio Lógico', texto:'Um estudante precisa organizar uma sequência de tarefas. Se ele realiza a tarefa A antes da B, e a tarefa B antes da C, qual afirmativa é CORRETA sobre a ordem de execução?', opcoes:['A precede B e C, e B precede C','C precede A e B','B precede A, e A precede C','A e C são executadas simultaneamente','B é a última tarefa'], correta:0, gabarito:'A alternativa A está correta pois, por transitividade da relação de ordem, se A < B e B < C, então A < B < C. A ordem de execução é obrigatoriamente A → B → C.', fonte:'ENADE 2023 – Formação Geral', forum:[] },
+  { id:2, ano:2023, componente:'fg', area:'Português', texto:'Considere o seguinte trecho: "A inteligência artificial avança de modo acelerado, transformando setores que antes dependiam exclusivamente do trabalho humano." O sujeito da oração principal é:', opcoes:['O trabalho humano','De modo acelerado','A inteligência artificial','Setores transformados','Exclusivamente'], correta:2, gabarito:'O sujeito da oração principal é "A inteligência artificial", pois é o ser sobre o qual se faz a declaração da oração. O verbo "avança" está na 3ª pessoa do singular, concordando com o sujeito.', fonte:'ENADE 2023 – Formação Geral', forum:[{user:'João P.', text:'Questão de gramática clássica — sempre identificar o verbo primeiro!', time:'há 2 dias', avatar:'JP', color:'#3b82f6'}] },
+  { id:3, ano:2022, componente:'ce', area:'Algoritmos', texto:'Considere o seguinte algoritmo de ordenação que compara pares adjacentes e os troca se estiverem na ordem errada, repetindo o processo até que nenhuma troca seja necessária. Esse algoritmo é conhecido como:', opcoes:['Quick Sort','Merge Sort','Bubble Sort','Insertion Sort','Heap Sort'], correta:2, gabarito:'O algoritmo descrito é o Bubble Sort. Ele compara elementos adjacentes e os troca quando necessário, com complexidade O(n²) no pior caso.', fonte:'ENADE 2022 – Conhecimento Específico', forum:[{user:'Ana S.', text:'Essa é clássica! Bubble Sort = comparação de adjacentes com trocas repetidas.', time:'há 5 dias', avatar:'AS', color:'#00d4aa'}] },
+  { id:4, ano:2022, componente:'ce', area:'Banco de Dados', texto:'Em um banco de dados relacional, a propriedade que garante que uma transação seja tratada como uma unidade atômica — ou seja, ou todas as operações são concluídas ou nenhuma é — é chamada de:', opcoes:['Consistência','Isolamento','Durabilidade','Atomicidade','Concorrência'], correta:3, gabarito:'A propriedade ACID "Atomicidade" (A de ACID) garante que uma transação seja executada completamente ou revertida por completo.', fonte:'ENADE 2022 – Conhecimento Específico', forum:[] },
+  { id:5, ano:2021, componente:'ce', area:'Redes', texto:'O protocolo responsável pela tradução de nomes de domínio legíveis por humanos (como "www.exemplo.com") em endereços IP é o:', opcoes:['HTTP','FTP','DNS','SMTP','TCP'], correta:2, gabarito:'O DNS (Domain Name System) é o protocolo/serviço responsável pela resolução de nomes de domínio em endereços IP.', fonte:'ENADE 2021 – Conhecimento Específico', forum:[] },
+  { id:6, ano:2021, componente:'ce', area:'Engenharia de Software', texto:'No modelo de desenvolvimento ágil Scrum, o artefato que representa a lista priorizada de funcionalidades a serem desenvolvidas, mantida pelo Product Owner, é denominado:', opcoes:['Sprint Backlog','Burndown Chart','Product Backlog','Daily Scrum','Definition of Done'], correta:2, gabarito:'O Product Backlog é a lista ordenada de tudo que pode ser necessário no produto, mantida e priorizada pelo Product Owner.', fonte:'ENADE 2021 – Conhecimento Específico', forum:[] },
+];
+
+const PENDING_QUESTIONS = [
+  { id:101, autor:'Prof. Ribeiro', area:'Algoritmos', componente:'ce', ano:2024, texto:'Um algoritmo recursivo que divide o problema em dois subproblemas de tamanho n/2 e combina os resultados em O(n) apresenta complexidade:', opcoes:['O(n)','O(n log n)','O(n²)','O(log n)','O(2ⁿ)'], correta:1, gabarito:'Pelo Teorema Mestre, T(n) = 2T(n/2) + O(n) resulta em O(n log n). Este é o caso do Merge Sort.', status:'pendente' }
+];
+
+const HIST_SIMULADOS = [
+  { id:1, data:'01/06/2026', questoes:10, acertos:8, tempo:'18:32', areas:{ 'Raciocínio Lógico':100, 'Algoritmos':75, 'Banco de Dados':50 } },
+  { id:2, data:'28/05/2026', questoes:10, acertos:7, tempo:'22:10', areas:{ 'Redes':100, 'Engenharia de Software':50, 'Português':100 } },
+  { id:3, data:'20/05/2026', questoes:6, acertos:4, tempo:'15:00', areas:{ 'Algoritmos':33, 'Banco de Dados':100 } },
+];
+
+const TURMAS_COORD = [
+  { id:'CC-2024A', nome:'CC 2024 – Turma A', curso:'Ciência da Computação', alunos:32, areas:[ {nome:'Raciocínio Lógico', pct:72}, {nome:'Português', pct:68}, {nome:'Algoritmos', pct:55}, {nome:'Banco de Dados', pct:63}, {nome:'Redes', pct:48}, {nome:'Eng. de Software', pct:71} ] },
+  { id:'CC-2024B', nome:'CC 2024 – Turma B', curso:'Ciência da Computação', alunos:28, areas:[ {nome:'Raciocínio Lógico', pct:65}, {nome:'Português', pct:73}, {nome:'Algoritmos', pct:61}, {nome:'Banco de Dados', pct:58}, {nome:'Redes', pct:52}, {nome:'Eng. de Software', pct:66} ] },
+];
+
+const ALUNOS_GESTAO = [
+  {nome:'Ana Souza', email:'ana@enade.com', turma:'CC-2024A'},
+  {nome:'Bruno Costa', email:'bruno@enade.com', turma:'CC-2024A'},
+  {nome:'Carla Mendes', email:'carla@enade.com', turma:'CC-2024B'},
+];
+
+const PROFS_GESTAO = [
+  {nome:'Prof. Carlos Lima', email:'prof@enade.com', area:'Algoritmos, BD'},
+  {nome:'Prof. Ana Ribeiro', email:'ribeiro@enade.com', area:'Redes, Eng. Software'},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentUser = null;
+let simuladoState = null;
+let questionAnswers = {};
+let registeredUsers = [...USERS];
+let pendingQuestions = [...PENDING_QUESTIONS];
+let questions = [...QUESTIONS];
+let forumData = {};
+
+// ============================================================
+// AUTH
+// ============================================================
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pwd = document.getElementById('loginPassword').value;
+  const user = registeredUsers.find(u => u.email === email && u.password === pwd);
+  if (!user) { document.getElementById('loginError').style.display = 'flex'; return; }
+  document.getElementById('loginError').style.display = 'none';
+  loginUser(user);
+}
+
+function demoLogin(role) {
+  const map = { estudante:'ana@enade.com', professor:'prof@enade.com', coordenador:'coord@enade.com' };
+  const user = registeredUsers.find(u => u.email === map[role]);
+  if (user) loginUser(user);
+}
+
+function loginUser(user) {
+  currentUser = user;
+  showApp();
+}
+
+function doLogout() {
+  if (simuladoState && simuladoState.interval) clearInterval(simuladoState.interval);
+  simuladoState = null;
+  questionAnswers = {};
+  currentUser = null;
+  const ham = document.getElementById('globalHamburger');
+  if (ham) ham.style.display = 'none';
+  closeSidebar();
+  showScreen('login');
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+}
+
+function showApp() {
+  showScreen('app');
+  // show hamburger on mobile
+  const ham = document.getElementById('globalHamburger');
+  if (ham) ham.style.display = '';
+  setupSidebar();
+  setupDashboard();
+  if (currentUser.role === 'estudante') {
+    renderBanco();
+    renderSimuladoSetup();
+    renderDesempenho();
+    renderForum();
+  } else if (currentUser.role === 'professor') {
+    renderProfessor();
+  } else if (currentUser.role === 'coordenador') {
+    renderCoordenador();
+    renderGestao();
+  }
+  showPage('dashboard');
+}
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-' + name);
+  if (pg) { pg.classList.add('active'); pg.querySelector('.page-body') && (pg.querySelector('.page-body').scrollTop = 0); }
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.dataset.page === name);
+  });
+  // Update page header title based on active nav item
+  const activeNav = document.querySelector('.nav-item.active');
+  // Re-render pages on navigation to keep content fresh
+  if (name === 'simulado' && !simuladoState) {
+    renderSimuladoSetup();
+  } else if (name === 'banco') {
+    renderBanco();
+  } else if (name === 'desempenho') {
+    renderDesempenho();
+  } else if (name === 'forum') {
+    renderForum();
+  } else if (name === 'professor') {
+    renderProfessor();
+  } else if (name === 'coordenador') {
+    renderCoordenador();
+  } else if (name === 'gestao') {
+    renderGestao();
+  } else if (name === 'dashboard') {
+    setupDashboard();
+    if (currentUser && currentUser.role === 'estudante') setTimeout(renderDashChart, 100);
+  }
+}
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+function setupSidebar() {
+  const { name, email, role } = currentUser;
+  const initials = name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const colors = { estudante:'#00d4aa', professor:'#3b82f6', coordenador:'#f59e0b' };
+  const color = colors[role] || '#94a3b8';
+  const avatarEl = document.getElementById('sidebarAvatar');
+  avatarEl.textContent = initials;
+  avatarEl.style.background = color + '22';
+  avatarEl.style.color = color;
+  document.getElementById('sidebarName').textContent = name;
+  document.getElementById('sidebarEmail').textContent = email;
+  const badge = document.getElementById('sidebarBadge');
+  badge.textContent = role;
+  badge.className = 'role-badge role-' + role;
+
+  const navDefs = {
+    estudante: [
+      { page:'dashboard', icon:svgIcon('home'), label:'Dashboard' },
+      { section:'Estudo' },
+      { page:'banco', icon:svgIcon('book'), label:'Banco de Questões' },
+      { page:'simulado', icon:svgIcon('clock'), label:'Simulado' },
+      { section:'Análise' },
+      { page:'desempenho', icon:svgIcon('chart'), label:'Meu Desempenho' },
+      { section:'Comunidade' },
+      { page:'forum', icon:svgIcon('chat'), label:'Fórum' },
+    ],
+    professor: [
+      { page:'dashboard', icon:svgIcon('home'), label:'Dashboard' },
+      { section:'Questões' },
+      { page:'professor', icon:svgIcon('edit'), label:'Gestão de Questões' },
+    ],
+    coordenador: [
+      { page:'dashboard', icon:svgIcon('home'), label:'Dashboard' },
+      { section:'Relatórios' },
+      { page:'coordenador', icon:svgIcon('chart'), label:'Painel de Turmas' },
+      { section:'Gestão' },
+      { page:'gestao', icon:svgIcon('users'), label:'Usuários e Turmas' },
+    ],
+  };
+
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = '';
+  (navDefs[role] || []).forEach(item => {
+    if (item.section) {
+      const label = document.createElement('div');
+      label.className = 'nav-section-label';
+      label.textContent = item.section;
+      nav.appendChild(label);
+    } else {
+      const btn = document.createElement('button');
+      btn.className = 'nav-item';
+      btn.dataset.page = item.page;
+      btn.innerHTML = item.icon + `<span>${item.label}</span>`;
+      btn.onclick = () => { showPage(item.page); closeSidebar(); };
+      nav.appendChild(btn);
+    }
+  });
+}
+
+function svgIcon(name) {
+  const icons = {
+    home: `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    book: `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+    clock: `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    chart: `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+    chat: `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+    edit: `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+    users: `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  };
+  return icons[name] || '';
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function setupDashboard() {
+  const role = currentUser.role;
+  document.getElementById('dashTitle').textContent = role === 'estudante' ? 'Meu Painel' : role === 'professor' ? 'Painel do Professor' : 'Painel da Coordenação';
+  document.getElementById('dashSubtitle').textContent = `Olá, ${currentUser.name.split(' ')[0]}! Bem-vindo ao EnadePREP.`;
+  const body = document.getElementById('dashBody');
+
+  if (role === 'estudante') {
+    const totalSim = HIST_SIMULADOS.length;
+    const avgAcertos = Math.round(HIST_SIMULADOS.reduce((a,s)=>a+Math.round(s.acertos/s.questoes*100),0)/totalSim);
+    body.innerHTML = `
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">📝</div><div class="stat-label">Simulados Realizados</div><div class="stat-value" style="color:var(--accent)">${totalSim}</div><div class="stat-sub">Último: 01/06/2026</div></div>
+        <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-label">Média de Acertos</div><div class="stat-value" style="color:var(--accent2)">${avgAcertos}%</div><div class="stat-sub">Nos últimos 3 simulados</div></div>
+        <div class="stat-card"><div class="stat-icon">📚</div><div class="stat-label">Questões Praticadas</div><div class="stat-value" style="color:var(--accent3)">${HIST_SIMULADOS.reduce((a,s)=>a+s.questoes,0)}</div></div>
+        <div class="stat-card"><div class="stat-icon">⚡</div><div class="stat-label">Área Mais Fraca</div><div class="stat-value" style="color:var(--danger);font-size:18px;padding-top:6px">Redes</div><div class="stat-sub">48% de acertos</div></div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="section-title">Últimos Simulados</div>
+          <div class="history-list">
+            ${HIST_SIMULADOS.map(s => { const pct=Math.round(s.acertos/s.questoes*100); const cls=pct>=70?'score-good':pct>=50?'score-ok':'score-bad'; return `<div class="history-item"><div class="history-score ${cls}">${pct}%</div><div class="history-details"><strong>${s.acertos}/${s.questoes} acertos</strong><span>📅 ${s.data} · ⏱ ${s.tempo}</span></div></div>`; }).join('')}
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Desempenho por Área</div>
+          <div class="chart-container" id="dashChart"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">Acesso Rápido</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-inline" onclick="showPage('simulado')">🎯 Iniciar Simulado</button>
+          <button class="btn btn-secondary btn-inline" onclick="showPage('banco')">📚 Banco de Questões</button>
+          <button class="btn btn-secondary btn-inline" onclick="showPage('desempenho')">📊 Ver Desempenho</button>
+        </div>
+      </div>`;
+    setTimeout(renderDashChart, 100);
+  } else if (role === 'professor') {
+    body.innerHTML = `
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-label">Questões Cadastradas</div><div class="stat-value" style="color:var(--accent2)">12</div></div>
+        <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-label">Pendentes de Validação</div><div class="stat-value" style="color:var(--accent3)">${pendingQuestions.length}</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-label">Validações Realizadas</div><div class="stat-value" style="color:var(--success)">8</div></div>
+      </div>
+      <div class="alert alert-info">ℹ️ Lembre-se: você não pode validar suas próprias questões (RN-07).</div>
+      <div class="card">
+        <div class="section-title">Acesso Rápido</div>
+        <div style="display:flex;gap:12px">
+          <button class="btn btn-primary btn-inline" onclick="showPage('professor')">➕ Cadastrar / Validar Questões</button>
+        </div>
+      </div>`;
+  } else {
+    body.innerHTML = `
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-label">Turmas Ativas</div><div class="stat-value" style="color:var(--accent)">${TURMAS_COORD.length}</div></div>
+        <div class="stat-card"><div class="stat-icon">🎓</div><div class="stat-label">Total de Alunos</div><div class="stat-value" style="color:var(--accent2)">${TURMAS_COORD.reduce((a,t)=>a+t.alunos,0)}</div></div>
+        <div class="stat-card"><div class="stat-icon">👨‍🏫</div><div class="stat-label">Professores</div><div class="stat-value" style="color:var(--accent3)">${PROFS_GESTAO.length}</div></div>
+        <div class="stat-card"><div class="stat-icon">📉</div><div class="stat-label">Área Crítica</div><div class="stat-value" style="font-size:16px;padding-top:8px;color:var(--danger)">Redes 50%</div></div>
+      </div>
+      <div class="alert alert-warning">🔒 Os dados exibidos são agregados e anonimizados conforme a LGPD (RN-05).</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-inline" onclick="showPage('coordenador')">📊 Ver Painel de Turmas</button>
+        <button class="btn btn-secondary btn-inline" onclick="showPage('gestao')">👥 Gestão de Usuários</button>
+      </div>`;
+  }
+}
+
+function renderDashChart() {
+  const areas = [
+    {label:'R. Lógico', pct:72, color:'#00d4aa'},{label:'Português', pct:68, color:'#3b82f6'},
+    {label:'Algoritmos', pct:55, color:'#f59e0b'},{label:'BD', pct:63, color:'#8b5cf6'},
+    {label:'Redes', pct:48, color:'#ef4444'},{label:'Eng. SW', pct:71, color:'#10b981'},
+  ];
+  const container = document.getElementById('dashChart');
+  if (!container) return;
+  container.innerHTML = areas.map(a => `<div class="chart-bar-wrap"><div class="chart-bar" style="height:0%;background:${a.color}20;border:1px solid ${a.color}40;position:relative"><span class="chart-pct" style="color:${a.color}">${a.pct}%</span></div><div class="chart-label">${a.label}</div></div>`).join('');
+  setTimeout(() => {
+    container.querySelectorAll('.chart-bar').forEach((bar,i) => { bar.style.height = areas[i].pct + '%'; bar.style.background = areas[i].color + '33'; bar.style.borderColor = areas[i].color; bar.style.transition = `height .6s cubic-bezier(.34,1.56,.64,1) ${i*0.07}s`; });
+  }, 50);
+}
+
+// ============================================================
+// BANCO
+// ============================================================
+function filterQuestions() {
+  const comp = document.getElementById('filterComp').value;
+  const ano = document.getElementById('filterAno').value;
+  const area = document.getElementById('filterArea').value;
+  renderQuestionList(questions.filter(q => (!comp||q.componente===comp) && (!ano||String(q.ano)===ano) && (!area||q.area===area)));
+}
+
+function resetFilters() {
+  document.getElementById('filterComp').value = '';
+  document.getElementById('filterAno').value = '';
+  document.getElementById('filterArea').value = '';
+  filterQuestions();
+}
+
+function renderBanco() { renderQuestionList(questions); }
+
+function renderQuestionList(list) {
+  const container = document.getElementById('questionList');
+  if (!container) return;
+  if (list.length === 0) { container.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>Nenhuma questão encontrada com os filtros selecionados.</p></div>`; return; }
+  container.innerHTML = list.map(q => buildQuestionCard(q, false)).join('');
+}
+
+function buildQuestionCard(q, inSimulado) {
+  const answered = questionAnswers[q.id] !== undefined;
+  const selected = questionAnswers[q.id];
+  const letters = ['A','B','C','D','E'];
+  const compClass = q.componente === 'fg' ? 'tag-fg' : 'tag-ce';
+  const compLabel = q.componente === 'fg' ? 'Formação Geral' : 'Conhecimento Específico';
+  const optionsHtml = q.opcoes.map((op,i) => {
+    let cls = 'option-item';
+    if (!inSimulado && answered) { if (i===q.correta) cls+=' correct'; else if (i===selected) cls+=' wrong'; }
+    else if (i===selected) cls+=' selected';
+    const clickAction = inSimulado ? `selectSimOp(${q.id},${i})` : `selectOption(${q.id},${i})`;
+    return `<button class="${cls}" onclick="${clickAction}"><span class="option-letter">${letters[i]}</span>${op}</button>`;
+  }).join('');
+  const gabaritoVisible = !inSimulado && answered;
+  return `<div class="question-card" id="qcard-${q.id}">
+    <div class="question-meta"><span class="tag ${compClass}">${compLabel}</span><span class="tag tag-year">ENADE ${q.ano}</span><span class="tag tag-area">${q.area}</span></div>
+    <div class="question-text">${q.texto}</div>
+    <div class="options-list">${optionsHtml}</div>
+    <div class="gabarito-box ${gabaritoVisible?'visible':''}" id="gab-${q.id}">
+      <div class="gabarito-title">✅ Gabarito Comentado — Resposta Correta: ${letters[q.correta]}</div>
+      <div class="gabarito-text">${q.gabarito}</div>
+      <div style="margin-top:8px;font-size:11px;color:var(--text3)">📌 Fonte: ${q.fonte}</div>
+    </div>
+    ${!inSimulado ? `<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px"><button class="btn btn-ghost btn-sm" onclick="openForum(${q.id})">💬 Fórum (${(q.forum||[]).length})</button></div>` : ''}
+  </div>`;
+}
+
+function selectOption(qId, optIdx) {
+  if (questionAnswers[qId] !== undefined) return;
+  questionAnswers[qId] = optIdx;
+  const q = questions.find(x=>x.id===qId);
+  const card = document.getElementById('qcard-'+qId);
+  if (!card) return;
+  card.querySelectorAll('.option-item').forEach((btn,i) => { btn.classList.remove('selected','correct','wrong'); if(i===q.correta) btn.classList.add('correct'); else if(i===optIdx) btn.classList.add('wrong'); });
+  const gab = document.getElementById('gab-'+qId);
+  if (gab) gab.classList.add('visible');
+  if (optIdx===q.correta) toast('✅ Resposta correta!','success'); else toast('❌ Resposta incorreta.','error');
+}
+
+// ============================================================
+// FORUM
+// ============================================================
+function renderForum() {
+  const body = document.getElementById('forumBody');
+  if (!body) return;
+  body.innerHTML = `<div class="section-title">Selecione uma questão para ver o fórum:</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${questions.map(q=>`<div class="question-card" onclick="openForum(${q.id})" style="cursor:pointer">
+        <div class="question-meta"><span class="tag tag-year">ENADE ${q.ano}</span><span class="tag tag-area">${q.area}</span></div>
+        <div class="question-text" style="font-size:13px">${q.texto.substring(0,100)}...</div>
+        <div style="font-size:12px;color:var(--text3)">💬 ${(q.forum||[]).length} comentário(s)</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+function openForum(qId) {
+  const q = questions.find(x=>x.id===qId);
+  const posts = [...(q.forum||[]),...(forumData[qId]||[])];
+  const colors = ['#00d4aa','#3b82f6','#f59e0b','#8b5cf6','#ef4444','#10b981'];
+  openModal(`<div class="modal-header"><h3>💬 Fórum — ENADE ${q.ano} · ${q.area}</h3><button class="close-btn" onclick="closeModal()">✕</button></div>
+    <div style="margin-bottom:16px;padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;color:var(--text2)">${q.texto}</div>
+    <div class="forum-thread">
+      ${posts.length===0 ? '<div class="empty-state" style="padding:20px"><p>Nenhum comentário ainda. Seja o primeiro!</p></div>' :
+        posts.map((p,i)=>`<div class="forum-post"><div class="forum-avatar" style="background:${colors[i%colors.length]}22;color:${colors[i%colors.length]}">${p.avatar||p.user.substring(0,2).toUpperCase()}</div><div class="forum-post-body"><div class="forum-post-header"><span class="forum-post-user">${p.user}</span><span class="forum-post-time">${p.time}</span></div><div class="forum-post-text">${p.text}</div></div></div>`).join('')}
+    </div>
+    <div class="forum-input-area">
+      <textarea id="forumMsg" placeholder="Escreva seu comentário..."></textarea>
+      <button class="btn btn-primary btn-sm btn-inline" onclick="postForum(${qId})">Enviar</button>
+    </div>`);
+}
+
+function postForum(qId) {
+  const msg = document.getElementById('forumMsg').value.trim();
+  if (!msg) return;
+  if (!forumData[qId]) forumData[qId] = [];
+  const initials = currentUser.name.split(' ').map(w=>w[0]).join('').substring(0,2);
+  forumData[qId].push({ user:currentUser.name, text:msg, time:'agora', avatar:initials });
+  closeModal(); openForum(qId);
+  toast('Comentário publicado!','success');
+}
+
+// ============================================================
+// SIMULADO
+// ============================================================
+function renderSimuladoSetup() {
+  const body = document.getElementById('simuladoBody');
+  if (!body) return;
+  const allAreas = [...new Set(questions.map(q=>q.area))].sort();
+  body.innerHTML = `
+    <div class="card" style="max-width:640px">
+      <h3 style="margin-bottom:20px;font-size:18px">Configurar Simulado</h3>
+
+      <div class="form-group">
+        <label class="form-label">Quantidade de questões</label>
+        <div class="chip-group" id="chipQtd">
+          <div class="chip active" onclick="selectChip(this,'chipQtd')">5</div>
+          <div class="chip" onclick="selectChip(this,'chipQtd')">10</div>
+          <div class="chip" onclick="selectChip(this,'chipQtd')">6</div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:16px">
+        <label class="form-label">Componente</label>
+        <div class="chip-group" id="chipComp">
+          <div class="chip active" onclick="selectChip(this,'chipComp')">Todos</div>
+          <div class="chip" onclick="selectChip(this,'chipComp')">Formação Geral</div>
+          <div class="chip" onclick="selectChip(this,'chipComp')">Conhecimento Específico</div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:16px">
+        <label class="form-label">Área de Conhecimento Específico <span style="font-size:11px;color:var(--text3)">(opcional — selecione uma ou mais)</span></label>
+        <div class="chip-group" id="chipAreas" style="margin-top:4px">
+          <div class="chip area-chip active" onclick="toggleAreaChip(this,'Todas')">Todas as áreas</div>
+          ${allAreas.map(a=>`<div class="chip area-chip" onclick="toggleAreaChip(this,'${a}')" data-area="${a}">${a}</div>`).join('')}
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:16px">
+        <label class="form-label">Tempo (minutos)</label>
+        <div class="chip-group" id="chipTempo">
+          <div class="chip" onclick="selectChip(this,'chipTempo')">10</div>
+          <div class="chip active" onclick="selectChip(this,'chipTempo')">20</div>
+          <div class="chip" onclick="selectChip(this,'chipTempo')">30</div>
+        </div>
+      </div>
+
+      <div class="alert alert-warning" style="margin-top:20px">
+        ⏱️ <strong>Atenção:</strong> O cronômetro não poderá ser pausado após o início do simulado (RN-03).
+      </div>
+      <button class="btn btn-primary btn-inline" style="margin-top:8px;min-width:200px" onclick="startSimulado()">🎯 Iniciar Simulado</button>
+    </div>`;
+}
+
+// Area chips: "Todas" = exclusive toggle; individual areas can be multi-selected
+function toggleAreaChip(el, area) {
+  const group = document.getElementById('chipAreas');
+  const todasChip = group.querySelector('.area-chip:not([data-area])');
+
+  if (area === 'Todas') {
+    group.querySelectorAll('.area-chip').forEach(c => c.classList.remove('active'));
+    todasChip.classList.add('active');
+    return;
+  }
+  // Deactivate "Todas" when a specific area is picked
+  todasChip.classList.remove('active');
+  el.classList.toggle('active');
+  // If nothing selected, re-activate "Todas"
+  const anySelected = [...group.querySelectorAll('.area-chip[data-area]')].some(c => c.classList.contains('active'));
+  if (!anySelected) todasChip.classList.add('active');
+}
+
+function selectChip(el, groupId) {
+  document.getElementById(groupId).querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function getChipVal(groupId) {
+  const active = document.getElementById(groupId) && document.getElementById(groupId).querySelector('.chip.active');
+  return active ? active.textContent.trim() : null;
+}
+
+function getSelectedAreas() {
+  const group = document.getElementById('chipAreas');
+  if (!group) return null;
+  const todasActive = group.querySelector('.area-chip:not([data-area])').classList.contains('active');
+  if (todasActive) return null; // null = all areas
+  const selected = [...group.querySelectorAll('.area-chip[data-area].active')].map(c=>c.dataset.area);
+  return selected.length ? selected : null;
+}
+
+function startSimulado() {
+  const qtd = parseInt(getChipVal('chipQtd') || '5');
+  const compStr = getChipVal('chipComp') || 'Todos';
+  const tempo = parseInt(getChipVal('chipTempo') || '20') * 60;
+  const selectedAreas = getSelectedAreas();
+
+  let pool = [...questions];
+  if (compStr === 'Formação Geral') pool = pool.filter(q=>q.componente==='fg');
+  else if (compStr === 'Conhecimento Específico') pool = pool.filter(q=>q.componente==='ce');
+  if (selectedAreas) pool = pool.filter(q=>selectedAreas.includes(q.area));
+
+  pool = pool.sort(()=>Math.random()-.5).slice(0, qtd);
+  if (pool.length === 0) { toast('Nenhuma questão disponível com esses filtros.','error'); return; }
+
+  simuladoState = { questions:pool, current:0, answers:{}, timerSec:tempo, startTime:Date.now() };
+  simuladoState.interval = setInterval(()=>{ simuladoState.timerSec--; updateTimerDisplay(); if(simuladoState.timerSec<=0) finalizarSimulado(true); }, 1000);
+  renderSimuladoAtivo();
+}
+
+function renderSimuladoAtivo() {
+  const body = document.getElementById('simuladoBody');
+  if (!body || !simuladoState) return;
+  const { questions:qs, current, answers, timerSec } = simuladoState;
+  const total = qs.length;
+  const answered = Object.keys(answers).length;
+  const q = qs[current];
+  body.innerHTML = `
+    <div class="simulado-header-bar">
+      <div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:2px">TEMPO RESTANTE</div>
+        <div class="timer-display ${timerSec<60?'danger':timerSec<180?'warning':''}" id="timerDisplay">${formatTime(timerSec)}</div>
+      </div>
+      <div class="progress-bar-container">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px;text-align:center">${answered}/${total} respondidas</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(answered/total*100)}%"></div></div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:2px">QUESTÃO</div>
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800">${current+1}<span style="font-size:14px;color:var(--text3)">/${total}</span></div>
+      </div>
+    </div>
+    <div class="question-nav">
+      ${qs.map((qq,i)=>`<button class="qnav-btn ${i===current?'current':answers[qq.id]!==undefined?'answered':''}" onclick="goToSimQ(${i})">${i+1}</button>`).join('')}
+    </div>
+    <div>${buildSimuladoQuestion(q)}</div>
+    <div class="simulado-actions">
+      <button class="btn btn-ghost btn-sm" onclick="goToSimQ(${Math.max(0,current-1)})" ${current===0?'disabled':''}>← Anterior</button>
+      ${current<total-1 ? `<button class="btn btn-secondary btn-sm" onclick="goToSimQ(${current+1})">Próxima →</button>` : `<button class="btn btn-primary btn-sm" onclick="finalizarSimulado(false)">✅ Finalizar Simulado</button>`}
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-danger btn-sm" onclick="confirmFinalizarSimulado()">⏹ Encerrar agora</button>
+    </div>`;
+}
+
+function buildSimuladoQuestion(q) {
+  const letters = ['A','B','C','D','E'];
+  const selected = simuladoState.answers[q.id];
+  return `<div class="question-card" style="cursor:default">
+    <div class="question-meta">
+      <span class="tag ${q.componente==='fg'?'tag-fg':'tag-ce'}">${q.componente==='fg'?'Formação Geral':'Conhecimento Específico'}</span>
+      <span class="tag tag-year">ENADE ${q.ano}</span><span class="tag tag-area">${q.area}</span>
+    </div>
+    <div class="question-text">${q.texto}</div>
+    <div class="options-list">
+      ${q.opcoes.map((op,i)=>`<button class="option-item ${selected===i?'selected':''}" onclick="selectSimOp(${q.id},${i})"><span class="option-letter">${letters[i]}</span>${op}</button>`).join('')}
+    </div>
+  </div>`;
+}
+
+function selectSimOp(qId, optIdx) {
+  if (!simuladoState) return;
+  simuladoState.answers[qId] = optIdx;
+  renderSimuladoAtivo();
+}
+
+function goToSimQ(idx) {
+  if (!simuladoState) return;
+  simuladoState.current = idx;
+  renderSimuladoAtivo();
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('timerDisplay');
+  if (!el || !simuladoState) return;
+  el.textContent = formatTime(simuladoState.timerSec);
+  el.className = 'timer-display' + (simuladoState.timerSec<60?' danger':simuladoState.timerSec<180?' warning':'');
+}
+
+function confirmFinalizarSimulado() {
+  const answered = Object.keys(simuladoState.answers).length;
+  openModal(`<div class="modal-header"><h3>Encerrar Simulado?</h3><button class="close-btn" onclick="closeModal()">✕</button></div>
+    <p style="font-size:14px;color:var(--text2);margin-bottom:20px">Você respondeu ${answered} de ${simuladoState.questions.length} questões. Tem certeza?</p>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-danger btn-inline" onclick="closeModal();finalizarSimulado(false)">Sim, encerrar</button>
+      <button class="btn btn-ghost btn-inline" onclick="closeModal()">Continuar</button>
+    </div>`);
+}
+
+function finalizarSimulado(timeout) {
+  if (!simuladoState) return;
+  clearInterval(simuladoState.interval);
+  const { questions:qs, answers, startTime } = simuladoState;
+  const elapsed = Math.floor((Date.now()-startTime)/1000);
+  let acertos = 0;
+  const areaMap = {};
+  qs.forEach(q => {
+    if (!areaMap[q.area]) areaMap[q.area] = {total:0,acertos:0};
+    areaMap[q.area].total++;
+    if (answers[q.id]===q.correta) { acertos++; areaMap[q.area].acertos++; }
+  });
+  const pct = Math.round(acertos/qs.length*100);
+  simuladoState = null;
+  closeModal();
+  const body = document.getElementById('simuladoBody');
+  if (!body) return;
+  const areaRows = Object.entries(areaMap).map(([area,data])=>{
+    const p=Math.round(data.acertos/data.total*100);
+    const c=p>=70?'var(--success)':p>=50?'var(--accent3)':'var(--danger)';
+    return `<tr><td>${area}</td><td>${data.acertos}/${data.total}</td><td><span class="bar-mini" style="width:${p/2}px;background:${c}40;border:1px solid ${c}"></span> <strong style="color:${c}">${p}%</strong></td></tr>`;
+  }).join('');
+  body.innerHTML = `
+    ${timeout?'<div class="alert alert-danger">⏱️ Tempo esgotado! O simulado foi encerrado automaticamente.</div>':''}
+    <div class="resultado-card">
+      <div style="font-size:14px;color:var(--text2)">Resultado do Simulado</div>
+      <div class="resultado-score">${pct}%</div>
+      <div style="font-size:14px;color:var(--text2)">${acertos} de ${qs.length} questões corretas</div>
+      <div class="resultado-grid">
+        <div class="resultado-item"><div class="resultado-item-val" style="color:var(--accent)">${acertos}</div><div class="resultado-item-label">Acertos</div></div>
+        <div class="resultado-item"><div class="resultado-item-val" style="color:var(--danger)">${qs.length-acertos}</div><div class="resultado-item-label">Erros</div></div>
+        <div class="resultado-item"><div class="resultado-item-val" style="color:var(--accent3)">${formatTime(elapsed)}</div><div class="resultado-item-label">Tempo</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">Desempenho por Área</div>
+      <table class="coord-table"><thead><tr><th>Área</th><th>Acertos</th><th>% Acertos</th></tr></thead><tbody>${areaRows}</tbody></table>
+    </div>
+    <div class="card">
+      <div class="section-title">Gabarito Comentado (RN-04)</div>
+      <div class="alert alert-info" style="margin-bottom:16px">ℹ️ O gabarito só é exibido após o encerramento do simulado.</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        ${qs.map((q,i)=>{
+          const userAns=answers[q.id]; const correct=userAns===q.correta; const letters=['A','B','C','D','E'];
+          return `<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <span style="font-family:'Syne',sans-serif;font-weight:700;color:var(--text3)">Q${i+1}</span>
+              <span style="font-size:18px">${correct?'✅':'❌'}</span><span class="tag tag-area">${q.area}</span>
+            </div>
+            <div style="font-size:13px;color:var(--text2);margin-bottom:8px">${q.texto.substring(0,80)}...</div>
+            <div style="font-size:12px;color:var(--text3)">Sua resposta: <strong style="color:${correct?'var(--success)':'var(--danger)'}">${userAns!==undefined?letters[userAns]:'—'}</strong> · Correta: <strong style="color:var(--success)">${letters[q.correta]}</strong></div>
+            <div class="gabarito-box visible" style="margin-top:8px;padding:10px"><div class="gabarito-title">Gabarito</div><div class="gabarito-text">${q.gabarito}</div></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div style="margin-top:20px">
+      <button class="btn btn-primary btn-inline" onclick="renderSimuladoSetup()">🔄 Novo Simulado</button>
+    </div>`;
+}
+
+function formatTime(secs) {
+  const m = Math.floor(secs/60).toString().padStart(2,'0');
+  const s = (secs%60).toString().padStart(2,'0');
+  return `${m}:${s}`;
+}
+
+// ============================================================
+// DESEMPENHO
+// ============================================================
+function renderDesempenho() {
+  const body = document.getElementById('desempenhoBody');
+  if (!body) return;
+  const areas = [
+    {nome:'Raciocínio Lógico', pct:72, c:'#00d4aa'},{nome:'Português', pct:68, c:'#3b82f6'},
+    {nome:'Algoritmos', pct:55, c:'#f59e0b'},{nome:'Banco de Dados', pct:63, c:'#8b5cf6'},
+    {nome:'Redes', pct:48, c:'#ef4444'},{nome:'Eng. de Software', pct:71, c:'#10b981'},
+  ];
+  body.innerHTML = `
+    <div class="two-col" style="margin-bottom:24px">
+      <div class="card">
+        <div class="section-title">Desempenho por Área</div>
+        <div class="chart-container" id="perfChart">
+          ${areas.map(a=>`<div class="chart-bar-wrap"><div class="chart-bar" style="height:0%;background:${a.c}33;border:1px solid ${a.c}"><span class="chart-pct" style="color:${a.c}">${a.pct}%</span></div><div class="chart-label" style="font-size:10px">${a.nome.split(' ')[0]}</div></div>`).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">Estatísticas Gerais</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          ${areas.map(a=>{const c=a.pct>=70?'var(--success)':a.pct>=50?'var(--accent3)':'var(--danger)';return `<div><div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px"><span>${a.nome}</span><strong style="color:${c}">${a.pct}%</strong></div><div class="progress-bar"><div class="progress-fill" style="width:${a.pct}%;background:${c};transition:width 1s ease"></div></div></div>`;}).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">Histórico de Simulados</div>
+      <div class="history-list">
+        ${HIST_SIMULADOS.map(s=>{const pct=Math.round(s.acertos/s.questoes*100);const cls=pct>=70?'score-good':pct>=50?'score-ok':'score-bad';const areaStr=Object.entries(s.areas).map(([k,v])=>`${k}: ${v}%`).join(' · ');return `<div class="history-item"><div class="history-score ${cls}">${pct}%</div><div class="history-details"><strong>${s.acertos}/${s.questoes} acertos</strong><span>📅 ${s.data} · ⏱ ${s.tempo}</span><span style="font-size:11px;color:var(--text3)">${areaStr}</span></div></div>`;}).join('')}
+      </div>
+    </div>`;
+  setTimeout(()=>{ document.querySelectorAll('#perfChart .chart-bar').forEach((bar,i)=>{ bar.style.height=areas[i].pct+'%'; bar.style.transition=`height .7s cubic-bezier(.34,1.56,.64,1) ${i*0.08}s`; }); }, 100);
+}
+
+// ============================================================
+// PROFESSOR
+// ============================================================
+function renderProfessor() {
+  const body = document.getElementById('professorBody');
+  if (!body) return;
+  body.innerHTML = `
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="section-title">Cadastrar Nova Questão</div>
+          <div class="form-group"><label class="form-label">Área</label>
+            <select class="form-select" id="pfArea"><option>Algoritmos</option><option>Banco de Dados</option><option>Redes</option><option>Engenharia de Software</option><option>Raciocínio Lógico</option><option>Português</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">Componente</label>
+            <select class="form-select" id="pfComp"><option value="fg">Formação Geral</option><option value="ce">Conhecimento Específico</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">Ano</label><input type="number" class="form-input" id="pfAno" value="2024" min="2000" max="2030"></div>
+          <div class="form-group"><label class="form-label">Enunciado</label><textarea class="form-input" id="pfTexto" rows="3" placeholder="Digite o enunciado..."></textarea></div>
+          <div class="form-group">
+            <label class="form-label">Alternativas (marque a correta)</label>
+            <div class="options-form">
+              ${['A','B','C','D','E'].map((l,i)=>`<div class="option-form-row"><input type="radio" name="pfCorreta" class="radio-correct" value="${i}" ${i===0?'checked':''}><input type="text" class="form-input" id="pfOp${i}" placeholder="Alternativa ${l}"></div>`).join('')}
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Gabarito Comentado</label><textarea class="form-input" id="pfGabarito" rows="3" placeholder="Explique a resposta correta..."></textarea></div>
+          <div class="alert alert-info">📋 Após o cadastro, a questão ficará pendente de validação por outro professor (RN-07).</div>
+          <button class="btn btn-primary btn-inline" onclick="cadastrarQuestao()">➕ Cadastrar Questão</button>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="section-title">Questões Pendentes de Validação <span class="badge">${pendingQuestions.length}</span></div>
+          <div class="alert alert-warning">⚠️ Você não pode validar suas próprias questões (RN-07).</div>
+          <div class="validacao-list" id="validacaoList"></div>
+        </div>
+      </div>
+    </div>`;
+  renderValidacaoList();
+}
+
+function renderValidacaoList() {
+  const list = document.getElementById('validacaoList');
+  if (!list) return;
+  if (pendingQuestions.length === 0) { list.innerHTML = '<div class="empty-state" style="padding:30px"><p>Nenhuma questão pendente.</p></div>'; return; }
+  list.innerHTML = pendingQuestions.map(q=>`
+    <div class="validacao-item">
+      <div class="validacao-item-header">
+        <div><strong style="font-size:14px">${q.area} — ${q.componente==='fg'?'FG':'CE'} ${q.ano}</strong><br><span style="font-size:12px;color:var(--text3)">Autor: ${q.autor}</span></div>
+        ${q.autor===currentUser.name ? '<span class="tag" style="background:rgba(239,68,68,.15);color:var(--danger)">Sua questão</span>' :
+          `<div class="validacao-actions">
+            <button class="btn btn-sm" style="background:rgba(16,185,129,.15);color:var(--success);border:1px solid rgba(16,185,129,.3)" onclick="validarQuestao(${q.id},true)">✅ Aprovar</button>
+            <button class="btn btn-sm" style="background:rgba(239,68,68,.15);color:var(--danger);border:1px solid rgba(239,68,68,.3)" onclick="validarQuestao(${q.id},false)">❌ Rejeitar</button>
+          </div>`}
+      </div>
+      <div style="font-size:13px;color:var(--text2)">${q.texto}</div>
+    </div>`).join('');
+}
+
+function cadastrarQuestao() {
+  const area=document.getElementById('pfArea').value, comp=document.getElementById('pfComp').value;
+  const ano=parseInt(document.getElementById('pfAno').value);
+  const texto=document.getElementById('pfTexto').value.trim(), gabarito=document.getElementById('pfGabarito').value.trim();
+  const opcoes=['pfOp0','pfOp1','pfOp2','pfOp3','pfOp4'].map(id=>document.getElementById(id).value.trim());
+  const correta=parseInt(document.querySelector('input[name="pfCorreta"]:checked').value);
+  if (!texto||opcoes.some(o=>!o)||!gabarito) { toast('Preencha todos os campos.','error'); return; }
+  pendingQuestions.push({ id:Date.now(), autor:currentUser.name, area, componente:comp, ano, texto, opcoes, correta, gabarito, status:'pendente' });
+  toast('Questão cadastrada! Aguardando validação.','success');
+  renderProfessor();
+}
+
+function validarQuestao(id, approved) {
+  const idx = pendingQuestions.findIndex(q=>q.id===id);
+  if (idx===-1) return;
+  if (approved) {
+    const q = pendingQuestions[idx];
+    questions.push({ ...q, fonte:`Cadastrada por professor — ${q.ano}`, forum:[] });
+    toast('Questão aprovada e publicada!','success');
+  } else { toast('Questão rejeitada.','error'); }
+  pendingQuestions.splice(idx,1);
+  renderProfessor();
+}
+
+// ============================================================
+// COORDENADOR
+// ============================================================
+function renderCoordenador() {
+  const body = document.getElementById('coordenadorBody');
+  if (!body) return;
+  body.innerHTML = `
+    <div class="alert alert-warning">🔒 Dados anonimizados — nenhum aluno é identificado individualmente (RN-05 · LGPD).</div>
+    <div class="turma-tab-bar">
+      ${TURMAS_COORD.map((t,i)=>`<div class="turma-tab ${i===0?'active':''}" onclick="selectTurma('${t.id}',this)">${t.nome}</div>`).join('')}
+    </div>
+    <div id="turmaPanel"></div>`;
+  renderTurmaPanel(TURMAS_COORD[0]);
+}
+
+function selectTurma(id, el) {
+  document.querySelectorAll('.turma-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderTurmaPanel(TURMAS_COORD.find(t=>t.id===id));
+}
+
+function renderTurmaPanel(turma) {
+  const panel = document.getElementById('turmaPanel');
+  if (!panel) return;
+  panel.innerHTML = `
+    <div class="stats-grid" style="margin-bottom:20px">
+      <div class="stat-card"><div class="stat-label">Alunos</div><div class="stat-value" style="color:var(--accent)">${turma.alunos}</div></div>
+      <div class="stat-card"><div class="stat-label">Média Geral</div><div class="stat-value" style="color:var(--accent2)">${Math.round(turma.areas.reduce((a,x)=>a+x.pct,0)/turma.areas.length)}%</div></div>
+      <div class="stat-card"><div class="stat-label">Área Mais Fraca</div><div class="stat-value" style="color:var(--danger);font-size:16px;padding-top:8px">${[...turma.areas].sort((a,b)=>a.pct-b.pct)[0].nome.split(' ')[0]}</div></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="section-title">Desempenho por Área</div>
+        <table class="coord-table"><thead><tr><th>Área</th><th>% Acertos</th><th>Nível</th></tr></thead>
+          <tbody>${[...turma.areas].sort((a,b)=>a.pct-b.pct).map(a=>{const c=a.pct>=70?'var(--success)':a.pct>=50?'var(--accent3)':'var(--danger)';const nivel=a.pct>=70?'Bom':a.pct>=50?'Regular':'Crítico';return `<tr><td>${a.nome}</td><td><span class="bar-mini" style="width:${a.pct/2}px;background:${c}40;border:1px solid ${c}"></span> <strong style="color:${c}">${a.pct}%</strong></td><td><span class="tag" style="background:${c}22;color:${c};font-size:10px">${nivel}</span></td></tr>`;}).join('')}</tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="section-title">Gráfico de Barras</div>
+        <div class="chart-container">
+          ${turma.areas.map(a=>{const c=a.pct>=70?'#10b981':a.pct>=50?'#f59e0b':'#ef4444';return `<div class="chart-bar-wrap"><div class="chart-bar" style="height:${a.pct}%;background:${c}33;border:1px solid ${c}"><span class="chart-pct" style="color:${c}">${a.pct}%</span></div><div class="chart-label" style="font-size:10px">${a.nome.split(' ')[0]}</div></div>`;}).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+// ============================================================
+// GESTÃO — cadastro de usuários apenas pelo coordenador
+// ============================================================
+function renderGestao() {
+  const body = document.getElementById('gestaoBody');
+  if (!body) return;
+  body.innerHTML = `
+    <div class="alert alert-info">🔐 O cadastro e gerenciamento de usuários é restrito ao coordenador do curso (RN-01).</div>
+    <div class="mgmt-grid">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div class="section-title" style="margin:0">Turmas</div>
+          <button class="btn btn-primary btn-sm btn-inline" onclick="modalCadTurma()">+ Cadastrar</button>
+        </div>
+        <div id="listaTurmas">
+          ${TURMAS_COORD.map(t=>`<div class="list-item"><div class="list-item-info"><strong>${t.nome}</strong><span>${t.alunos} alunos</span></div></div>`).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div class="section-title" style="margin:0">Alunos</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm btn-inline" onclick="modalRecuperarSenha('estudante')">🔑 Recuperar Senha</button>
+            <button class="btn btn-primary btn-sm btn-inline" onclick="modalCadAluno()">+ Cadastrar</button>
+          </div>
+        </div>
+        <div id="listaAlunos">
+          ${ALUNOS_GESTAO.map(a=>`<div class="list-item"><div class="list-item-info"><strong>${a.nome}</strong><span>${a.turma}</span></div><span style="font-size:11px;color:var(--text3)">${a.email}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div class="section-title" style="margin:0">Professores</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm btn-inline" onclick="modalRecuperarSenha('professor')">🔑 Recuperar Senha</button>
+            <button class="btn btn-primary btn-sm btn-inline" onclick="modalCadProf()">+ Cadastrar</button>
+          </div>
+        </div>
+        <div>
+          ${PROFS_GESTAO.map(p=>`<div class="list-item"><div class="list-item-info"><strong>${p.nome}</strong><span>${p.area}</span></div></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function modalCadTurma() {
+  openModal(`<div class="modal-header"><h3>Cadastrar Turma</h3><button class="close-btn" onclick="closeModal()">✕</button></div>
+    <div class="form-group"><label class="form-label">Nome da Turma</label><input class="form-input" id="mTurmaName" placeholder="Ex: CC 2025 – Turma A"></div>
+    <div class="form-group"><label class="form-label">Curso</label><select class="form-select" id="mTurmaCurso"><option>Ciência da Computação</option><option>Engenharia de Software</option><option>Sistemas de Informação</option></select></div>
+    <button class="btn btn-primary btn-inline" onclick="saveTurma()">Cadastrar</button>`);
+}
+
+function saveTurma() {
+  const nome = document.getElementById('mTurmaName').value.trim();
+  if (!nome) { toast('Preencha o nome da turma.','error'); return; }
+  TURMAS_COORD.push({ id:'T'+Date.now(), nome, curso:document.getElementById('mTurmaCurso').value, alunos:0, areas:[] });
+  closeModal(); renderGestao(); renderCoordenador();
+  toast('Turma cadastrada!','success');
+}
+
+function modalCadAluno() {
+  openModal(`<div class="modal-header"><h3>Cadastrar Aluno</h3><button class="close-btn" onclick="closeModal()">✕</button></div>
+    <div class="alert alert-info" style="margin-bottom:16px">O aluno receberá as credenciais de acesso por e-mail.</div>
+    <div class="form-group"><label class="form-label">Nome Completo</label><input class="form-input" id="mAlunoNome"></div>
+    <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" id="mAlunoEmail" type="email"></div>
+    <div class="form-group"><label class="form-label">Senha temporária</label><input class="form-input" id="mAlunoSenha" type="text" placeholder="Será enviada por e-mail" value="123456"></div>
+    <div class="form-group"><label class="form-label">Turma</label><select class="form-select" id="mAlunoTurma">${TURMAS_COORD.map(t=>`<option value="${t.id}">${t.nome}</option>`).join('')}</select></div>
+    <button class="btn btn-primary btn-inline" onclick="saveAluno()">Cadastrar</button>`);
+}
+
+function saveAluno() {
+  const nome=document.getElementById('mAlunoNome').value.trim();
+  const email=document.getElementById('mAlunoEmail').value.trim();
+  const senha=document.getElementById('mAlunoSenha').value.trim()||'123456';
+  const turma=document.getElementById('mAlunoTurma').value;
+  if (!nome||!email) { toast('Preencha todos os campos.','error'); return; }
+  if (registeredUsers.find(u=>u.email===email)) { toast('E-mail já cadastrado.','error'); return; }
+  registeredUsers.push({ id:Date.now(), name:nome, email, password:senha, role:'estudante', curso:TURMAS_COORD.find(t=>t.id===turma)?.curso||'', turma });
+  ALUNOS_GESTAO.push({nome, email, turma});
+  const t = TURMAS_COORD.find(x=>x.id===turma);
+  if (t) t.alunos++;
+  closeModal(); renderGestao(); renderCoordenador();
+  toast(`Aluno cadastrado! Login: ${email} / ${senha}`,'success');
+}
+
+function modalCadProf() {
+  openModal(`<div class="modal-header"><h3>Cadastrar Professor</h3><button class="close-btn" onclick="closeModal()">✕</button></div>
+    <div class="alert alert-info" style="margin-bottom:16px">O professor receberá as credenciais de acesso por e-mail.</div>
+    <div class="form-group"><label class="form-label">Nome Completo</label><input class="form-input" id="mProfNome"></div>
+    <div class="form-group"><label class="form-label">E-mail</label><input class="form-input" id="mProfEmail" type="email"></div>
+    <div class="form-group"><label class="form-label">Senha temporária</label><input class="form-input" id="mProfSenha" type="text" value="123456"></div>
+    <div class="form-group"><label class="form-label">Área de Atuação</label><input class="form-input" id="mProfArea" placeholder="Ex: Algoritmos, BD"></div>
+    <button class="btn btn-primary btn-inline" onclick="saveProf()">Cadastrar</button>`);
+}
+
+function saveProf() {
+  const nome=document.getElementById('mProfNome').value.trim();
+  const email=document.getElementById('mProfEmail').value.trim();
+  const senha=document.getElementById('mProfSenha').value.trim()||'123456';
+  const area=document.getElementById('mProfArea').value.trim();
+  if (!nome||!email) { toast('Preencha todos os campos.','error'); return; }
+  if (registeredUsers.find(u=>u.email===email)) { toast('E-mail já cadastrado.','error'); return; }
+  registeredUsers.push({ id:Date.now(), name:nome, email, password:senha, role:'professor', curso:'' });
+  PROFS_GESTAO.push({nome, email, area});
+  closeModal(); renderGestao();
+  toast(`Professor cadastrado! Login: ${email} / ${senha}`,'success');
+}
+
+// ============================================================
+// RECUPERAR SENHA (RN — Coordenador)
+// ============================================================
+function modalRecuperarSenha(tipo) {
+  const roleLabel = tipo === 'estudante' ? 'Aluno' : 'Professor';
+  const roleFilter = tipo === 'estudante' ? 'estudante' : 'professor';
+  const lista = registeredUsers.filter(u => u.role === roleFilter);
+  const options = lista.map(u => `<option value="${u.id}">${u.nome || u.name} — ${u.email}</option>`).join('');
+  openModal(`<div class="modal-header"><h3>🔑 Recuperar Senha — ${roleLabel}</h3><button class="close-btn" onclick="closeModal()">✕</button></div>
+    <div class="alert alert-warning" style="margin-bottom:16px">⚠️ A nova senha será exibida aqui e deverá ser repassada ao ${roleLabel.toLowerCase()} pessoalmente ou por e-mail institucional.</div>
+    <div class="form-group">
+      <label class="form-label">Selecionar ${roleLabel}</label>
+      <select class="form-select" id="rSenhaUser">
+        <option value="">— Selecione —</option>
+        ${options}
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nova Senha Temporária</label>
+      <input class="form-input" id="rSenhaNova" type="text" placeholder="Ex: Enade@2026" value="Enade@2026">
+    </div>
+    <button class="btn btn-primary btn-inline" onclick="saveRecuperarSenha()">Redefinir Senha</button>`);
+}
+
+function saveRecuperarSenha() {
+  const uid = parseInt(document.getElementById('rSenhaUser').value);
+  const nova = document.getElementById('rSenhaNova').value.trim();
+  if (!uid) { toast('Selecione um usuário.', 'error'); return; }
+  if (!nova || nova.length < 6) { toast('A senha deve ter ao menos 6 caracteres.', 'error'); return; }
+  const user = registeredUsers.find(u => u.id === uid);
+  if (!user) { toast('Usuário não encontrado.', 'error'); return; }
+  user.password = nova;
+  closeModal();
+  toast(`✅ Senha de ${user.name} redefinida para: ${nova}`, 'success');
+}
+
+// ============================================================
+// MODAL & TOASTS
+// ============================================================
+function openModal(html) {
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+document.getElementById('modalOverlay').addEventListener('click', e => { if(e.target===document.getElementById('modalOverlay')) closeModal(); });
+
+function toast(msg, type='info') {
+  const container = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons={success:'✅',error:'❌',info:'ℹ️'};
+  el.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  container.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),300); }, 3500);
+}
+
+// ============================================================
+// SIDEBAR TOGGLE (mobile)
+// ============================================================
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.sidebar-overlay');
+  sidebar.classList.toggle('open');
+  overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+}
+
+function closeSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.sidebar-overlay');
+  sidebar.classList.remove('open');
+  overlay.style.display = 'none';
+}
+
+// ============================================================
+// KEYBOARD
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') closeModal();
+  if (e.key==='Enter' && document.getElementById('screen-login').classList.contains('active')) doLogin();
+});
+</script>
+</body>
+</html>
